@@ -27,10 +27,10 @@ open class DaySolver(val day: Int, val name: String) {
 
     open val exampleInput: String = ""
 
-    val input: String = runBlocking {
+    val input: List<String> = runBlocking {
         val f = File("inputs/$day")
         if (f.exists()) {
-            f.readText()
+            f.readLines()
         } else {
             val response = client.get("https://adventofcode.com/2022/day/$day/input") {
                 header("User-Agent", "hguelque@gmail.com")
@@ -38,7 +38,7 @@ open class DaySolver(val day: Int, val name: String) {
             val content = response.bodyAsText().trimEnd()
             f.parentFile.mkdir()
             f.writeText(content)
-            content
+            content.split("\n")
         }
     }
 
