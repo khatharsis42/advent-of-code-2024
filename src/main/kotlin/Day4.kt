@@ -17,7 +17,12 @@ class Day4 : DaySolver(4, "Ceres Search") {
     private val aSet = mutableSetOf<Coordinates>()
     private val sSet = mutableSetOf<Coordinates>()
 
+    // List of aligned MA
+    private val maList = mutableListOf<Pair<Coordinates, Coordinates>>()
+
     override fun firstPart(input: List<String>): String {
+        // Creating the sets for each letter
+        // Takes a bit of time but prevents us from having to check for edge cases later on
         input.forEachIndexed { y, line ->
             line.forEachIndexed { x, c ->
                 when (c) {
@@ -29,18 +34,20 @@ class Day4 : DaySolver(4, "Ceres Search") {
             }
         }
 
-        val xmList = mutableListOf<Pair<Coordinates, Coordinates>>()
-        xSet.forEach { xCoord ->
-            xCoord.getNeighboursDiagonals().forEach { mCoord ->
-                if (mCoord in mSet)
-                    xmList.add(xCoord to mCoord)
+        // Check for each aligned MA
+        mSet.forEach { mCoord ->
+            mCoord.getNeighboursDiagonals().forEach { aCoord ->
+                if (aCoord in aSet)
+                    maList.add(mCoord to aCoord)
             }
         }
-        val xmasCount = xmList.count { (xCoord, mCoord) ->
-            val orientation = mCoord - xCoord
-            val aCoord = mCoord + orientation
+
+        // Count the number of XMAS lines
+        val xmasCount = maList.count { (mCoord, aCoord) ->
+            val orientation = aCoord - mCoord
+            val xCoord = mCoord - orientation
             val sCoord = aCoord + orientation
-            aCoord in aSet && sCoord in sSet
+            xCoord in xSet && sCoord in sSet
         }
 
         return xmasCount.toString()
@@ -48,34 +55,34 @@ class Day4 : DaySolver(4, "Ceres Search") {
 
 
     override fun secondPart(input: List<String>): String {
-        val maList = mutableListOf<Pair<Coordinates, Coordinates>>()
-        mSet.forEach { mCoord ->
-            mCoord.getNeighboursDiagonals().forEach { aCoord ->
-                if (aCoord in aSet)
-                    maList.add(mCoord to aCoord)
-            }
-        }
-        val masList = maList.mapNotNull { (mCoord, aCoord) ->
+        // Create a map where the key is wherever there's an A that's in the middle of an aligned MAS
+        // And the value is the list of MAS going through it
+        val aMap_msList = mutableMapOf<Coordinates, MutableList<Pair<Coordinates, Coordinates>>>()
+        maList.forEach { (mCoord, aCoord) ->
             val orientation = aCoord - mCoord
             val sCoord = aCoord + orientation
-            if (sCoord in sSet) Triple(mCoord, aCoord, sCoord) else null
-        }.toMutableSet()
-
-        var x_masCount = 0
-        while (masList.isNotEmpty()) {
-            val masLine = masList.first()
-            masList.remove(masLine)
-            val crossingMasLine = masList.find {
-                it.second == masLine.second &&
-                        (it.second - it.first) * (masLine.second - masLine.first) == 0
-            }
-            if (crossingMasLine != null) {
-                masList.remove(crossingMasLine)
-                x_masCount++
+            if (sCoord in sSet) {
+                if (aMap_msList[aCoord] == null) {
+                    aMap_msList[aCoord] = mutableListOf()
+                }
+                aMap_msList[aCoord]!!.add(mCoord to sCoord)
             }
         }
 
-
+        var x_masCount = 0
+        aMap_msList.forEach { aCoord, msList ->
+            while (msList.isNotEmpty()) {
+                val msLine = msList.first()
+                msList.remove(msLine)
+                val crossingMsLine = msList.find {
+                    (it.second - it.first) * (msLine.second - msLine.first) == 0
+                }
+                if (crossingMsLine != null) {
+                    msList.remove(crossingMsLine)
+                    x_masCount++
+                }
+            }
+        }
 
         return x_masCount.toString()
     }
