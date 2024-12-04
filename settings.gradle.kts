@@ -1,2 +1,2 @@
-rootProject.name = "Al3xCalibur"
+rootProject.name = "advent-of-code-2024"
 
