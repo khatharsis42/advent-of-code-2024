@@ -7,5 +7,6 @@ fun main() {
     Day2().solve()
     Day3().solve()
     Day4().solve()
-    Day4().solveTest()
+    Day5().solve()
+    Day5().solveTest()
 }
