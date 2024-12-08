@@ -41,7 +41,7 @@ class Day7 : DaySolver(7, "Bridge Repair") {
             return false
         }
 
-        fun applyLeftToRight(operation: List<Char>) =
+        private fun applyLeftToRight(operation: List<Char>) =
             operation.dropLast(1).foldIndexed(values.first()) { index, acc, c ->
                 when (c) {
                     '+' -> acc + values[index + 1]
@@ -55,7 +55,7 @@ class Day7 : DaySolver(7, "Bridge Repair") {
         override fun equals(other: Any?) = other is Operation && (other.result == result && other.values == values)
     }
 
-    val inputMap = mutableMapOf<Operation, Int>()
+    private val inputMap = mutableMapOf<Operation, Int>()
 
 
     override fun firstPart(input: List<String>): String {
