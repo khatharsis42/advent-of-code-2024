@@ -19,6 +19,9 @@ fun <E> List<List<E>>.rotate(): List<List<E>> =
 typealias Coordinates = Pair<Int, Int>
 typealias Coordinates3D = Triple<Int, Int, Int>
 
+
+fun Coordinates.rotate90() = second to -first
+
 fun Coordinates.getNeighbours() = listOf(
     this.first + 1 to this.second,
     this.first - 1 to this.second,
