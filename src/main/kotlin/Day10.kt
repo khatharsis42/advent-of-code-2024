@@ -37,7 +37,6 @@ class Day10 : DaySolver(10, "Hoof It") {
             }
         }
 
-        nodes.forEach { println(it) }
         return nodes.flatten()
     }
 
