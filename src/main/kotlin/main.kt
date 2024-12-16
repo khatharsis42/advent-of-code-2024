@@ -18,4 +18,6 @@ fun main() {
     Day9().solveTest()
     Day10().solve()
     Day10().solveTest()
+    Day11().solve()
+    Day11().solveTest()
 }

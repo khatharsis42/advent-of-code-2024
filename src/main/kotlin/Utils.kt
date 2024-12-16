@@ -1,4 +1,12 @@
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
+
+
+fun <A, B>List<A>.pmap(f: suspend (A) -> B): List<B> = runBlocking {
+    map { async(Dispatchers.Default) { f(it) } }.map { it.await() }
+}
 
 fun List<String>.groupBySeparatorBlank() = this.fold(mutableListOf(mutableListOf<String>())) { acc, it ->
     if (it.isBlank()) {
