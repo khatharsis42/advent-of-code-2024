@@ -51,8 +51,8 @@ class Day14 : DaySolver(14, "Restroom Redoubt") {
     }
 
     private fun printRobotList(limits: Coordinates) {
-        for (line in 1..limits.second) {
-            for (col in 1..limits.first) {
+        for (col in 1..limits.first) {
+            for (line in 1..limits.second) {
                 if (robotList.any { it.position == line to col }) print('#')
                 else print(" ")
             }
@@ -80,7 +80,7 @@ class Day14 : DaySolver(14, "Restroom Redoubt") {
             }
             if (timer > 1_000) {
                 if (score < mean * .8) {
-                    //printRobotList(limits)
+                    // printRobotList(limits)
                     return timer.toString()
                 }
             }
