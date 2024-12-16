@@ -35,12 +35,14 @@ sealed class Direction {
         South -> West
         West -> North
     }
+
     fun rotateOpp90() = when (this) {
         North -> West
         West -> South
         South -> East
         East -> North
     }
+
     override fun toString() = when (this) {
         North -> "North"
         West -> "West"
@@ -48,6 +50,7 @@ sealed class Direction {
         South -> "South"
     }
 }
+
 object North : Direction()
 object South : Direction()
 object East : Direction()
@@ -72,14 +75,14 @@ fun Coordinates.getNeighbours() = listOf(
 
 
 fun Coordinates.getNeighboursDiagonals() = listOf(
-    this.first + 1 to this.second - 1,
-    this.first + 1 to this.second,
-    this.first + 1 to this.second + 1,
-    this.first to this.second - 1,
-    this.first to this.second + 1,
-    this.first - 1 to this.second - 1,
-    this.first - 1 to this.second,
-    this.first - 1 to this.second + 1
+    this + North + West,
+    this + North,
+    this + North + East,
+    this + East,
+    this + South + East,
+    this + South,
+    this + South + West,
+    this + West
 )
 
 fun Coordinates3D.getNeighbours() = listOf(
@@ -102,7 +105,6 @@ operator fun Coordinates.times(other: Coordinates) = this.first * other.second +
 operator fun Coordinates.times(other: Int) = (this.first * other) to (this.second * other)
 operator fun Coordinates.rem(other: Coordinates) = this.first.mod(other.first) to this.second.mod(other.second)
 
-
-operator fun <T> Coordinates.get(grid: List<List<T>>) = grid[this.first][this.second]
-
+operator fun <T> List<List<T>>.get(coordinates: Coordinates) = get(coordinates.first).get(coordinates.second)
+operator fun <T> List<MutableList<T>>.set(coordinates: Coordinates, value: T) = get(coordinates.first).set(coordinates.second, value)
 fun Coordinates.manhattan(other: Coordinates) = abs(this.first - other.first) + abs(this.second - other.second)

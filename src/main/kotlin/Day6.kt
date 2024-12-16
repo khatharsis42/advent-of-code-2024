@@ -40,13 +40,13 @@ class Day6 : DaySolver(6, "Guard Gallivant") {
         while (coordinates.first in 0 until bounds.first && coordinates.second in 0 until bounds.second) {
             // Check if we've been in the same place, same state before
             if (coordinates in visitedCells) {
-                if (orientation in coordinates[visitedCellsPosition]!!) {
+                if (orientation in visitedCellsPosition[coordinates]!!) {
                     return 0 to true
                 }
-                coordinates[visitedCellsPosition]!!.add(orientation)
+                visitedCellsPosition[coordinates]!!.add(orientation)
             } else {
                 visitedCells.add(coordinates)
-                visitedCellsPosition[coordinates.first][coordinates.second] = mutableListOf(orientation)
+                visitedCellsPosition[coordinates] = mutableListOf(orientation)
             }
             // Handle the case where there's an obstacle
             if (coordinates + orientation in walls) {
