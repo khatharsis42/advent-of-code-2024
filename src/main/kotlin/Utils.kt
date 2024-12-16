@@ -99,6 +99,9 @@ fun <T> Coordinates.getNeighbours(grid: List<List<T>>) = getNeighbours()
 operator fun Coordinates.plus(other: Coordinates) = this.first + other.first to this.second + other.second
 operator fun Coordinates.minus(other: Coordinates) = this.first - other.first to this.second - other.second
 operator fun Coordinates.times(other: Coordinates) = this.first * other.second + this.second * other.first
+operator fun Coordinates.times(other: Int) = (this.first * other) to (this.second * other)
+operator fun Coordinates.rem(other: Coordinates) = this.first.mod(other.first) to this.second.mod(other.second)
+
 
 operator fun <T> Coordinates.get(grid: List<List<T>>) = grid[this.first][this.second]
 
