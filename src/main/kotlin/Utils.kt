@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 
-fun <A, B>List<A>.pmap(f: suspend (A) -> B): List<B> = runBlocking {
+fun <A, B> List<A>.pmap(f: suspend (A) -> B): List<B> = runBlocking {
     map { async(Dispatchers.Default) { f(it) } }.map { it.await() }
 }
 
@@ -28,14 +28,48 @@ typealias Coordinates = Pair<Int, Int>
 typealias Coordinates3D = Triple<Int, Int, Int>
 
 
+sealed class Direction {
+    fun rotate90() = when (this) {
+        North -> East
+        East -> South
+        South -> West
+        West -> North
+    }
+    fun rotateOpp90() = when (this) {
+        North -> West
+        West -> South
+        South -> East
+        East -> North
+    }
+    override fun toString() = when (this) {
+        North -> "North"
+        West -> "West"
+        East -> "East"
+        South -> "South"
+    }
+}
+object North : Direction()
+object South : Direction()
+object East : Direction()
+object West : Direction()
+
+operator fun Coordinates.plus(other: Direction): Coordinates = when (other) {
+    North -> first - 1 to second
+    South -> first + 1 to second
+    East -> first to second + 1
+    West -> first to second - 1
+}
+
+
 fun Coordinates.rotate90() = second to -first
 
 fun Coordinates.getNeighbours() = listOf(
-    this.first + 1 to this.second,
-    this.first - 1 to this.second,
-    this.first to this.second + 1,
-    this.first to this.second - 1
+    this + North,
+    this + East,
+    this + South,
+    this + West
 )
+
 
 fun Coordinates.getNeighboursDiagonals() = listOf(
     this.first + 1 to this.second - 1,
