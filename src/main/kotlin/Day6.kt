@@ -33,10 +33,10 @@ class Day6 : DaySolver(6, "Guard Gallivant") {
                          walls:Set<Coordinates>
                           ): Pair<Int, Boolean> {
         var coordinates = startingCoordinates
-        var orientation = Coordinates(-1, 0)
+        var orientation: Direction = North
         val visitedCells = mutableSetOf<Coordinates>()
         val visitedCellsPosition =
-            (0 until bounds.first).map { arrayOfNulls<MutableList<Coordinates>>(bounds.second).toMutableList() }
+            (0 until bounds.first).map { arrayOfNulls<MutableList<Direction>>(bounds.second).toMutableList() }
         while (coordinates.first in 0 until bounds.first && coordinates.second in 0 until bounds.second) {
             // Check if we've been in the same place, same state before
             if (coordinates in visitedCells) {
