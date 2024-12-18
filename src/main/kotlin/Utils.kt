@@ -4,6 +4,8 @@ import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 
+fun Long.pow(p: Long): Long = if (p == 0L) 1L else (this * pow(p-1))
+
 fun <A, B> List<A>.pmap(f: suspend (A) -> B): List<B> = runBlocking {
     map { async(Dispatchers.Default) { f(it) } }.map { it.await() }
 }

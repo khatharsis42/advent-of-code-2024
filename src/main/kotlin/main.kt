@@ -20,4 +20,6 @@ fun main() {
     Day14().solve()
     //Day14().solveTest()
     //Day16().solve()
+    Day17().solve()
+    //Day17().solveTest()
 }
