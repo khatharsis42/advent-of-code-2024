@@ -15,32 +15,25 @@ class Day19 : DaySolver(19, "Linen Layout") {
     """.trimIndent().lines()
 
     private val knownPatterns = mutableMapOf<String, Boolean>()
-    private val knownPatternCounts = mutableMapOf<String, Long>()
+    private val knownPatternCounts = mutableMapOf<String, Long>("" to 1L)
     private lateinit var basePatterns: Set<String>
     private val minSize: Int by lazy { basePatterns.minOf { it.length } }
     private val maxSize: Int by lazy { basePatterns.maxOf { it.length } }
 
 
-    private fun String.isPatternAvailable(): Boolean =
-        if (this in knownPatterns) knownPatterns[this]!! else
-            (length > minSize && (1 until length).any {
-                substring(0, it).isPatternAvailable() && substring(it).isPatternAvailable()
-            }).also { knownPatterns[this] = it }
+    private fun String.isPatternAvailable(): Boolean = knownPatterns.getOrPut(this) {
+        length > minSize && (1 until length).any {
+            substring(0, it).isPatternAvailable() && substring(it).isPatternAvailable()
+        }
+    }
 
-    private fun String.getPossibleDecompositions(): Long {
-        if (isEmpty()) return 1L
-        if (this !in knownPatternCounts) {
-            val temp = (1..(min(maxSize, length))).sumOf {
-                val firstSub = substring(0, it)
-                val lastSub = substring(it)
-                if (firstSub in basePatterns) {
-                    lastSub.getPossibleDecompositions()
+    private fun String.getPossibleDecompositions(): Long = knownPatternCounts.getOrPut(this) {
+            (1..(min(maxSize, length))).sumOf {
+                if (substring(0, it) in basePatterns) {
+                    substring(it).getPossibleDecompositions()
                 } else 0
             }
-            knownPatternCounts[this] = temp
         }
-        return knownPatternCounts[this]!!
-    }
 
 
     override fun firstPart(input: List<String>): String {
